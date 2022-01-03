@@ -1,2 +1,2 @@
 # Torpedo_Beadando
-a
+https://torpedo-mienk.netlify.app/
