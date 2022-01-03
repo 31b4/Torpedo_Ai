@@ -1,3 +1,5 @@
+JATEKVAN = false
+
 //-------------Segédek----------------
 function MasterReset(){
     window.location.reload();
@@ -10,13 +12,71 @@ function StartFight(ownSea){
     document.getElementById("btn").remove()
     enemySea = []
     var flottaDiv = document.getElementById("flotta")
-    flottaDiv.appendChild(MakeSea(false,enemySea))
+    flottaDiv.appendChild(MakeSea(false,enemySea,ownSea))
     RandomPlace(enemySea,false)
     MakeOnHover(false,enemySea)
     document.getElementById("Ycurrent").style.backgroundColor="green"
-
 }
-
+function Wincheck(who,sea){ // true= own; false = enemy
+    cntr = 0
+    for (let y = 0; y < 10; y++) {
+        for (let x = 0; x < 10; x++) {
+            if (sea[y][x]==3){
+                cntr +=1
+            }
+        }
+    }
+    if (cntr == 15) {
+        if (who) {
+            alert("TE NYERTÉÉÉL")
+        }
+        else{
+            alert("ROBOT NYERT :(((((")
+        }
+    }
+}
+function RobotStep(ownSea){
+    setTimeout(function() {
+        document.getElementById("Ycurrent").style.backgroundColor="green"
+        document.getElementById("Ecurrent").style.backgroundColor=""
+        do {
+            y = Math.floor(Math.random() * 10);
+            x = Math.floor(Math.random() * 10);
+        } while (ownSea[y][x]==2);
+        console.log
+        document.getElementById(''+y+true+x).style.backgroundColor="red"
+        ownSea[y][x] = 2 // rossz talalat
+        if (ownSea[y][x]==1) {
+            document.getElementById(''+y+true+x).innerHTML="X"
+            document.getElementById(''+y+true+x).style.color="whitesmoke"
+            document.getElementById(''+y+true+x).style.fontSize="35px"
+            ownSea[y][x] = 3 // jo talalat
+            Wincheck(false,ownSea)
+        }
+        JATEKVAN = false
+    }, 1000);
+}
+function Durrr(y,x,enemySea,ownSea){
+    if (JATEKVAN) {
+        return
+    }
+    if (enemySea[y][x]==0) {
+        document.getElementById("Ecurrent").style.backgroundColor="green"
+        document.getElementById("Ycurrent").style.backgroundColor=""
+        document.getElementById(''+y+false+x).style.backgroundColor="red"
+        enemySea[y][x]=2// rossz talalat
+        JATEKVAN=true
+        RobotStep(ownSea)
+    }
+    else if(enemySea[y][x] != 2){
+        document.getElementById(''+y+false+x).style.backgroundColor="red"
+        document.getElementById(''+y+false+x).innerHTML="X"
+        document.getElementById(''+y+false+x).style.color="whitesmoke"
+        document.getElementById(''+y+false+x).style.fontSize="35px"
+        enemySea[y][x]=3 // jo talalat
+        Wincheck(true,enemySea)
+    }
+}
 //-------------Generalas---------------
 function Neighbors8Check(check,sea){
     var neighbors8 = [[0,-1],[0,+1],[-1,0],[+1,0],[-1,-1],[+1,+1],[-1,+1],[+1,-1]]//osszes szomszed
@@ -89,7 +149,7 @@ function RandomPlace(sea,who){
         
     }
 }
-function MakeSea(who,sea){// true = own ; false = enemy
+function MakeSea(who,sea,otherSea){// true = own ; false = enemy
     var table = document.createElement("table")
     var tblBody = document.createElement("tbody");
     var div = document.createElement("div")
@@ -118,6 +178,9 @@ function MakeSea(who,sea){// true = own ; false = enemy
             td.style.border = '1px solid white';
             td.id = ''+y+who+x
             sv.push(0)
+            if (!who) {
+                td.onclick= function(){Durrr(y,x,sea,otherSea)}
+            }
             tr.appendChild(td)
         }
         tblBody.appendChild(tr)
@@ -142,7 +205,7 @@ function MakeOnHover(who,sea){
         }
     }
 }
-function StartButton(){
+function StartButton(ownSea){
     var div = document.createElement("div")
     div.className="col"
     div.id="btn"
@@ -153,16 +216,29 @@ function StartButton(){
     btn.style.height="500px"
     btn.style.backgroundColor="#006699"
     btn.innerHTML="GO"
-    btn.onclick = function(){StartFight()};
+    btn.onclick = function(){StartFight(ownSea)};
     div.appendChild(btn)
     return div
+}
+//---------------INFO--------------
+function INFO(){
+    PlayReset()
+    var flottaDiv = document.getElementById("flotta")
+    var p = document.createElement("p")
+    p.innerHTML="A JATEK gombra kattintva lepakolja a hajókat (fekete négyzet). <br> Ha nem tetszik a lerakás akkor a gomb újboli megnyomás esetén máshova teszi.<br> Ha megelégedett a lepakolással akkor a GO gombbal véglegesítve elkezdődik a játék.<br> Ezután az ellenfél táblájában belül lehet kattintani a tetszőleg (kilövendő) négyzetre. <br>Majd vársz a robot válaszára és vica-versa."
+    p.style.fontSize="30px"
+    p.style.fontFamily="Roboto Mono"
+    p.style.color="whitesmoke"
+    p.style.marginTop="50px"
+    flottaDiv.appendChild(p)
 }
 //---------------MAIN--------------
 function Play(){
     PlayReset()
     ownSea = []
+    svSea = [] // ennek nincs itt ertelme
     var flottaDiv = document.getElementById("flotta")
-    flottaDiv.appendChild(MakeSea(true,ownSea))
+    flottaDiv.appendChild(MakeSea(true,ownSea,svSea))
     RandomPlace(ownSea,true)
     MakeOnHover(true,ownSea)
     flottaDiv.appendChild(StartButton(ownSea))
