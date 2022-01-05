@@ -1,6 +1,4 @@
 JATEKVAN = false
-prev = []
-var INDEX =0
 //-------------Segédek----------------
 function MasterReset(){
     window.location.reload();
@@ -34,22 +32,79 @@ function Wincheck(who,sea){ // true= own; false = enemy
         else{
             alert("ROBOT NYERT :(((((")
         }
+        MasterReset()
     }
 }
-function AiAllow(y,x,ownSea){
-    
-    neighbors = [[0,-1],[0,+1],[-1,0],[+1,0]]//4 szomszed
-    
-        
-    
-    return [y+neighbors[INDEX][0],x+neighbors[INDEX][1]]
+function AiAllow(ownSea){
+    aNB = [[0,-1],[0,+1],[-1,0],[+1,0]]//4 szomszed
+    hNB = [[0,-1],[0,+1]]// horizontal szomszedok
+    vNB = [[-1,0],[+1,0]]// vertical szomszedok
+    for (let y = 0; y < 10; y++) {
+        for (let x = 0; x < 10; x++) {//ez a ketto ciklus vegigmegy a matrix tengerunkon
+            if (ownSea[y][x]==3) {
+                //dontsuk el hogy horizontalis vagy verticalis! ezaltal felesleges helyek vizsgalatat skippelhetjuk
+                var hr = false // horizontal bool
+                try {
+                    if(ownSea[y][x-1]==3 || ownSea[y][x+1]==3) {
+                        hr = true
+                    }
+                } catch (error) {}
+                var vr = false
+                try {
+                    if(ownSea[y-1][x]==3 || ownSea[y+1][x]==3) {
+                        vr = true
+                    }
+                } catch (error) {}
+                if (hr) {//horizontal?
+                    for (let i = 0; i < hNB.length; i++) {
+                        try {
+                            if (ownSea[y+hNB[i][0]][x+hNB[i][1]]==0 || ownSea[y+hNB[i][0]][x+hNB[i][1]]==1) {
+                                return [y+hNB[i][0],x+hNB[i][1]]
+                            }
+                        } catch (error) {}
+                    }
+                }
+                else if (vr) {//vertical?
+                    for (let i = 0; i < vNB.length; i++) {
+                        try {
+                            if (ownSea[y+vNB[i][0]][x+vNB[i][1]]==0 || ownSea[y+vNB[i][0]][x+vNB[i][1]]==1) {
+                                return [y+vNB[i][0],x+vNB[i][1]]
+                            }
+                        } catch (error) {}
+                    }
+                }
+                else{//csak egy col!
+                    for (let i = 0; i < aNB.length; i++) {
+                        try {
+                            if (ownSea[y+aNB[i][0]][x+aNB[i][1]]==0 || ownSea[y+aNB[i][0]][x+aNB[i][1]]==1) {
+                                return [y+aNB[i][0],x+aNB[i][1]]
+                            }
+                        } catch (error) {} 
+                    }   
+                    
+                }
+            }
+        }
+    }
+    return -1
+}
+function UselessStep(y,x,ownSea){
+    var nb = [[0,-1],[0,+1],[-1,0],[+1,0],[-1,-1],[+1,+1],[-1,+1],[+1,-1]]//osszes szomszed 8db
+    for (let i = 0; i < nb.length; i++) {
+        try {
+            if (ownSea[y+nb[i][0]][x+nb[i][1]]==3) {
+                return true
+            }
+        } catch (error) {}
+    }
+    return false
 }
 function RobotStep(ownSea,bool){
     setTimeout(function() {
         var x = -1
         var y = -1
-        if (bool) {
-            sv= AiAllow(prev[0],prev[1],ownSea)
+        sv= AiAllow(ownSea)
+        if (sv != -1) {
             y = sv[0]
             x = sv[1]
         }
@@ -57,23 +112,22 @@ function RobotStep(ownSea,bool){
             do {
                 y = Math.floor(Math.random() * 10);
                 x = Math.floor(Math.random() * 10); 
-            } while (ownSea[y][x]==2 || ownSea[y][x]==3);
+                console.log(y+' '+x)
+                console.log(UselessStep(y,x,ownSea))
+            } while (ownSea[y][x]==2 || UselessStep(y,x,ownSea) || ownSea[y][x]==3);
         }
         prev = [y,x]
         document.getElementById(''+y+true+x).style.backgroundColor="red"
-        console.log(ownSea)
-        console.log("asdasdsa")
+
         if (ownSea[y][x]==1) {
             document.getElementById(''+y+true+x).innerHTML="X"
             document.getElementById(''+y+true+x).style.color="whitesmoke"
             document.getElementById(''+y+true+x).style.fontSize="35px"
             ownSea[y][x] = 3 // jo talalat
+
             Wincheck(false,ownSea)
             RobotStep(ownSea,true)
-            INDEX++
-            if (INDEX == 4) {
-                INDEX == 0
-            }
+            
         }
         else{
             ownSea[y][x] = 2 // rossz talalat
@@ -82,7 +136,7 @@ function RobotStep(ownSea,bool){
         }
         JATEKVAN = false
         
-    }, 1000);
+    }, 500);
 }
 function Durrr(y,x,enemySea,ownSea){
     if (JATEKVAN) {
@@ -94,7 +148,6 @@ function Durrr(y,x,enemySea,ownSea){
         document.getElementById(''+y+false+x).style.backgroundColor="red"
         enemySea[y][x]=2// rossz talalat
         JATEKVAN=true
-        INDEX = 0
         RobotStep(ownSea,false)
         
     }
@@ -273,3 +326,4 @@ function Play(){
     MakeOnHover(true,ownSea)
     flottaDiv.appendChild(StartButton(ownSea))
 }
+

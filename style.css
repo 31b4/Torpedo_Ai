@@ -37,4 +37,8 @@ body{
 #flotta table{
     margin: auto;
 }
+#menu{
+    color: whitesmoke;
+    font: 25px "Roboto Mono", monospace;
+}
 
