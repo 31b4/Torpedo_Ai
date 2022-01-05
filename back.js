@@ -118,8 +118,9 @@ function RobotStep(ownSea,bool){
         }
         prev = [y,x]
         document.getElementById(''+y+true+x).style.backgroundColor="red"
-
+        
         if (ownSea[y][x]==1) {
+            document.getElementById(''+y+true+x).style.backgroundColor="#8B0000"
             document.getElementById(''+y+true+x).innerHTML="X"
             document.getElementById(''+y+true+x).style.color="whitesmoke"
             document.getElementById(''+y+true+x).style.fontSize="35px"
@@ -142,7 +143,7 @@ function Durrr(y,x,enemySea,ownSea){
     if (JATEKVAN) {
         return
     }
-    if (enemySea[y][x]==0) {
+    if (enemySea[y][x]==0 || enemySea[y][x]==2) {//-----------------------------KIVENNI A 2-t
         document.getElementById("Ecurrent").style.backgroundColor="green"
         document.getElementById("Ycurrent").style.backgroundColor=""
         document.getElementById(''+y+false+x).style.backgroundColor="red"
@@ -152,7 +153,7 @@ function Durrr(y,x,enemySea,ownSea){
         
     }
     else if(enemySea[y][x] != 2){
-        document.getElementById(''+y+false+x).style.backgroundColor="red"
+        document.getElementById(''+y+false+x).style.backgroundColor="#8B0000"
         document.getElementById(''+y+false+x).innerHTML="X"
         document.getElementById(''+y+false+x).style.color="whitesmoke"
         document.getElementById(''+y+false+x).style.fontSize="35px"
@@ -229,7 +230,6 @@ function RandomPlace(sea,who){
                 break
             }
         }
-        
     }
 }
 function MakeSea(who,sea,otherSea){// true = own ; false = enemy
@@ -284,7 +284,6 @@ function MakeOnHover(who,sea){
             else{
                 document.getElementById(''+y+false+x).style.cursor = "crosshair"; 
             }
-            
         }
     }
 }
@@ -326,4 +325,3 @@ function Play(){
     MakeOnHover(true,ownSea)
     flottaDiv.appendChild(StartButton(ownSea))
 }
-
