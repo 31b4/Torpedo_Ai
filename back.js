@@ -1,5 +1,6 @@
 JATEKVAN = false
-
+prev = []
+var INDEX =0
 //-------------Segédek----------------
 function MasterReset(){
     window.location.reload();
@@ -28,32 +29,59 @@ function Wincheck(who,sea){ // true= own; false = enemy
     }
     if (cntr == 15) {
         if (who) {
-            alert("TE NYERTÉÉÉL")
+            alert("TE NYERTÉÉÉL :)))))))))")
         }
         else{
             alert("ROBOT NYERT :(((((")
         }
     }
 }
-function RobotStep(ownSea){
+function AiAllow(y,x,ownSea){
+    
+    neighbors = [[0,-1],[0,+1],[-1,0],[+1,0]]//4 szomszed
+    
+        
+    
+    return [y+neighbors[INDEX][0],x+neighbors[INDEX][1]]
+}
+function RobotStep(ownSea,bool){
     setTimeout(function() {
-        document.getElementById("Ycurrent").style.backgroundColor="green"
-        document.getElementById("Ecurrent").style.backgroundColor=""
-        do {
-            y = Math.floor(Math.random() * 10);
-            x = Math.floor(Math.random() * 10);
-        } while (ownSea[y][x]==2);
-        console.log
+        var x = -1
+        var y = -1
+        if (bool) {
+            sv= AiAllow(prev[0],prev[1],ownSea)
+            y = sv[0]
+            x = sv[1]
+        }
+        else{
+            do {
+                y = Math.floor(Math.random() * 10);
+                x = Math.floor(Math.random() * 10); 
+            } while (ownSea[y][x]==2 || ownSea[y][x]==3);
+        }
+        prev = [y,x]
         document.getElementById(''+y+true+x).style.backgroundColor="red"
-        ownSea[y][x] = 2 // rossz talalat
+        console.log(ownSea)
+        console.log("asdasdsa")
         if (ownSea[y][x]==1) {
             document.getElementById(''+y+true+x).innerHTML="X"
             document.getElementById(''+y+true+x).style.color="whitesmoke"
             document.getElementById(''+y+true+x).style.fontSize="35px"
             ownSea[y][x] = 3 // jo talalat
             Wincheck(false,ownSea)
+            RobotStep(ownSea,true)
+            INDEX++
+            if (INDEX == 4) {
+                INDEX == 0
+            }
+        }
+        else{
+            ownSea[y][x] = 2 // rossz talalat
+            document.getElementById("Ycurrent").style.backgroundColor="green"
+            document.getElementById("Ecurrent").style.backgroundColor=""
         }
         JATEKVAN = false
+        
     }, 1000);
 }
 function Durrr(y,x,enemySea,ownSea){
@@ -66,7 +94,9 @@ function Durrr(y,x,enemySea,ownSea){
         document.getElementById(''+y+false+x).style.backgroundColor="red"
         enemySea[y][x]=2// rossz talalat
         JATEKVAN=true
-        RobotStep(ownSea)
+        INDEX = 0
+        RobotStep(ownSea,false)
+        
     }
     else if(enemySea[y][x] != 2){
         document.getElementById(''+y+false+x).style.backgroundColor="red"
