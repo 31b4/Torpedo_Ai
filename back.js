@@ -1,4 +1,5 @@
 JATEKVAN = false
+SHIP1 = false // ez azt nezi hogy az egyes hajot megtalalte e vagy sem
 //-------------Segédek----------------
 function MasterReset(){
     window.location.reload();
@@ -36,9 +37,9 @@ function Wincheck(who,sea){ // true= own; false = enemy
     }
 }
 function AiAllow(ownSea){
-    aNB = [[0,-1],[0,+1],[-1,0],[+1,0]]//4 szomszed
-    hNB = [[0,-1],[0,+1]]// horizontal szomszedok
-    vNB = [[-1,0],[+1,0]]// vertical szomszedok
+    var aNB = [[0,-1],[0,+1],[-1,0],[+1,0]]//4 szomszed
+    var hNB = [[0,-1],[0,+1]]// horizontal szomszedok
+    var vNB = [[-1,0],[+1,0]]// vertical szomszedok
     for (let y = 0; y < 10; y++) {
         for (let x = 0; x < 10; x++) {//ez a ketto ciklus vegigmegy a matrix tengerunkon
             if (ownSea[y][x]==3) {
@@ -81,7 +82,6 @@ function AiAllow(ownSea){
                             }
                         } catch (error) {} 
                     }   
-                    
                 }
             }
         }
@@ -99,7 +99,7 @@ function UselessStep(y,x,ownSea){
     }
     return false
 }
-function RobotStep(ownSea,bool){
+function RobotStep(ownSea){
     setTimeout(function() {
         var x = -1
         var y = -1
@@ -118,17 +118,14 @@ function RobotStep(ownSea,bool){
         }
         prev = [y,x]
         document.getElementById(''+y+true+x).style.backgroundColor="red"
-        
         if (ownSea[y][x]==1) {
             document.getElementById(''+y+true+x).style.backgroundColor="#8B0000"
             document.getElementById(''+y+true+x).innerHTML="X"
             document.getElementById(''+y+true+x).style.color="whitesmoke"
             document.getElementById(''+y+true+x).style.fontSize="35px"
             ownSea[y][x] = 3 // jo talalat
-
             Wincheck(false,ownSea)
-            RobotStep(ownSea,true)
-            
+            RobotStep(ownSea)
         }
         else{
             ownSea[y][x] = 2 // rossz talalat
@@ -136,21 +133,19 @@ function RobotStep(ownSea,bool){
             document.getElementById("Ecurrent").style.backgroundColor=""
         }
         JATEKVAN = false
-        
     }, 500);
 }
 function Durrr(y,x,enemySea,ownSea){
     if (JATEKVAN) {
         return
     }
-    if (enemySea[y][x]==0 || enemySea[y][x]==2) {//-----------------------------KIVENNI A 2-t
+    if (enemySea[y][x]==0) {
         document.getElementById("Ecurrent").style.backgroundColor="green"
         document.getElementById("Ycurrent").style.backgroundColor=""
         document.getElementById(''+y+false+x).style.backgroundColor="red"
         enemySea[y][x]=2// rossz talalat
         JATEKVAN=true
-        RobotStep(ownSea,false)
-        
+        RobotStep(ownSea)
     }
     else if(enemySea[y][x] != 2){
         document.getElementById(''+y+false+x).style.backgroundColor="#8B0000"
@@ -211,7 +206,7 @@ function Direction(y,x,i,sea){
         if (valid) {
             return ship
         }
-    }  
+    }
     return []
 }
 function RandomPlace(sea,who){
@@ -234,7 +229,7 @@ function RandomPlace(sea,who){
 }
 function MakeSea(who,sea,otherSea){// true = own ; false = enemy
     var table = document.createElement("table")
-    var tblBody = document.createElement("tbody");
+    var tblBody = document.createElement("tbody")
     var div = document.createElement("div")
     div.className="col"
     var p = document.createElement("p")
@@ -253,12 +248,12 @@ function MakeSea(who,sea,otherSea){// true = own ; false = enemy
     for (let y = 0; y < 10; y++) {// rows
         var tr = document.createElement("tr")
         var sv = []
-        for (let x = 0; x < 10; x++) {// cols 
+        for (let x = 0; x < 10; x++) {// cols
             var td = document.createElement("td")
             td.style.width="50px"
             td.style.height="50px"
             td.style.backgroundColor="#006699"
-            td.style.border = '1px solid white';
+            td.style.border = '1px solid white'
             td.id = ''+y+who+x
             sv.push(0)
             if (!who) {
@@ -278,11 +273,11 @@ function MakeOnHover(who,sea){
         for (let x = 0; x < 10; x++) {
             if (who) {
                 if (sea[y][x]==1) {
-                    document.getElementById(''+y+true+x).style.cursor = "grab"; 
+                    document.getElementById(''+y+true+x).style.cursor = "grab";
                 }
             }
             else{
-                document.getElementById(''+y+false+x).style.cursor = "crosshair"; 
+                document.getElementById(''+y+false+x).style.cursor = "crosshair";
             }
         }
     }
