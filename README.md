@@ -1,4 +1,4 @@
-# [Test link](https://torpedo-mienk.netlify.app/)
+# [Test link](https://torpedo-ai.netlify.app/)
 ### Utmutató:
   * 5 hajó van 1-5-ig
   * a hajók nem `erintkezhetnek`, `horizontálisan` és `átlósan` sem
