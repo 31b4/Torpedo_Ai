@@ -1,13 +1,13 @@
 body{
     background-color: #0e1212;
     background-image: url("img/hatter.jpg");
+    background-attachment:fixed;
     background-size:fill;
     background-size: 100%;
-    background-attachment:fixed;
 }
 /*-----------------HEADER----------------*/
 #container{
-    background-color: rgb(85, 55, 55);
+    background-color: rgb(54, 197, 233);
     margin: auto;
     margin-top: 2%;
     width: 80%;
@@ -17,14 +17,14 @@ body{
 }
 #container a{
     transition: color .2s ease-out;
-    color: whitesmoke;
+    color: rgb(5, 22, 77);
     font: 25px "Roboto Mono", monospace;
     text-decoration: none;
 }
 #container a:hover{
     cursor:pointer;
     transition: color .1s ease-out;
-    color: rgb(94, 90, 90);
+    color: rgb(32, 91, 179);
 }
 /*-----------------JATEK-----------------*/
 #flotta{
@@ -37,8 +37,31 @@ body{
 #flotta table{
     margin: auto;
 }
-#menu{
+/*-------------------LEIRAS---------------------*/
+#aiLeiras{
+    margin-top: 8%;
+    padding: 30px;
     color: whitesmoke;
     font: 25px "Roboto Mono", monospace;
+    text-align: left;
+    background-color: rgb(14, 49, 100);
+    opacity: 80%;
+    border-radius: 10px;
+}
+#aiLeiras ul{
+    margin: 20px;
+}
+#aiLeiras li{
+    margin: 10px;
 }
 
+/*------------------FOOTER-----------------------------*/
+footer {
+	background-color: #0005;
+	position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+}

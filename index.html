@@ -21,29 +21,28 @@
         </div>
     </div>
     <div id="flotta" class="row">
-        <table>
-            <tr>
-                <tr><p></p></tr>
-                <tr><p></p></tr>
-                <tr><p id="menu">Készítették:</p></td>
-                  <hr align="left" width="80">
-                <tr><p id="menu">Heged József Kevin</p></td>
-                <tr><p id="menu">Szilágyi Bence</p></td>
-                <tr><p id="menu">Pálfi Zoltán</p></td>
-                  <hr align="left" width="125">
-                <tr><p id="menu">Csapatunk neve: BZK</p></td>
-                  <hr align="left" width="140">
-                <tr><p id="menu">Játék neve: Torpedó</p></td>
-                  <hr align="left" width="130">
-                <tr><p id="menu">Feladatot adta: Szabó Emánuel.</p></td>
-                  <hr align="left" width="205">
-                <tr><p id="menu">Sok siker!</p></td>
-                <tr><p id="menu">Hajrá!</p></td>
-                  <hr align="left" width="65">
-                <tr<p id="menu">UI: GOTO,BREAK,TÖMB mentes a programm(sajnos)!</p></td>
-            </tr>  
-          </table>
+      <div id="aiLeiras">
+        <h2><b>Ai működése röviden</b>:</h2>
+        <ul>
+          <li>a játék közben random helyeket generál majd ezekre figyel: </li>
+          <ul>
+            <li>ha a körülötte lévő <b>8 helyen</b> ha van kilőtt hajó akkor újat generál</li>
+            <li>ha mar az adott pozociot meglotte nem lovi meg újra</li>
+          </ul>
+          <li>ha <b>sikeresen</b> kilövi a hajó egyik részét: </li>
+          <ul>
+            <li>megnézi az y tengelyen lévő két szomszédját ha egyiken hajó van akkor tudja hogy a hajó horizontálisan fekszik a tangeren</li>
+            <li>amennyiben az előző feltéteklek nem teljesülnek rájön hogy vertikálisan fekszik</li>
+            <li>ha sem horizontális sem vertikális akkor megtalálta a legkisebb hajót ami egyetlen részből áll</li>
+          </ul>
+          <li>hamarosan...</li>
+        </ul> 
+      </div>
     </div>
     <script src="back.js"></script>
+
+    <footer>
+      <p>készítette: <a target="new" rel="stylesheet" href="https://github.com/31b4">31b4</a></p>
+    </footer>
 </body>
 </html>
