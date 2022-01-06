@@ -1,2 +1,2 @@
-# Torpedo_Beadando
+# Torpedo_AI
 https://torpedo-mienk.netlify.app/
