@@ -1,11 +1,23 @@
-JATEKVAN = false
-SHIP1 = false // ez azt nezi hogy az egyes hajot megtalalte e vagy sem
+// 0 = tenger ; 1 = hajo ; 2 = rossz talalat ; 3 = jo talalat ; 4 = felesleges odamenni
+/*
+HIBAK
+
+
+*/
+var JATEKVAN = false
+var SHIP1 = false // ez azt nezi hogy az egyes hajot megtalalte e vagy sem
+var DONESHIP = [false,false,false,false,false] // nezi melyik hajo van kesz
+var STREAK = 0
 //-------------Segédek----------------
 function MasterReset(){
     window.location.reload();
 }
 function PlayReset(){// uj jatek
     document.getElementById("flotta").innerHTML =""
+    JATEKVAN = false
+    SHIP1 = false // ez azt nezi hogy az egyes hajot megtalalte e vagy sem
+    DONESHIP = [false,false,false,false,false] // nezi melyik hajo van kesz
+    STREAK = 0
 }
 //--------------Harc------------------
 function StartFight(ownSea){
@@ -46,13 +58,23 @@ function AiAllow(ownSea){
                 //dontsuk el hogy horizontalis vagy verticalis! ezaltal felesleges helyek vizsgalatat skippelhetjuk
                 var hr = false // horizontal bool
                 try {
-                    if(ownSea[y][x-1]==3 || ownSea[y][x+1]==3) {
+                    if(ownSea[y][x-1]==3 ) {
+                        hr = true
+                    }
+                } catch (error) {}
+                try {
+                    if(ownSea[y][x+1]==3) {
                         hr = true
                     }
                 } catch (error) {}
                 var vr = false
                 try {
-                    if(ownSea[y-1][x]==3 || ownSea[y+1][x]==3) {
+                    if(ownSea[y-1][x]==3) {
+                        vr = true
+                    }
+                } catch (error) {}
+                try {
+                    if(ownSea[y+1][x]==3) {
                         vr = true
                     }
                 } catch (error) {}
@@ -81,7 +103,7 @@ function AiAllow(ownSea){
                                 return [y+aNB[i][0],x+aNB[i][1]]
                             }
                         } catch (error) {} 
-                    }   
+                    }
                 }
             }
         }
@@ -93,28 +115,63 @@ function UselessStep(y,x,ownSea){
     for (let i = 0; i < nb.length; i++) {
         try {
             if (ownSea[y+nb[i][0]][x+nb[i][1]]==3) {
+                ownSea[y][x] = 4
                 return true
             }
         } catch (error) {}
     }
     return false
 }
+function NewCordGen(ownSea) {
+    var sv = []
+    do {
+        var y = Math.floor(Math.random() * 10);
+        var x = Math.floor(Math.random() * 10);
+    } while (ownSea[y][x]==2  || ownSea[y][x]==3 || ownSea[y][x]==4 || UselessStep(y,x,ownSea));
+    sv.push(y)
+    sv.push(x)
+    return sv
+}
 function RobotStep(ownSea){
     setTimeout(function() {
-        var x = -1
         var y = -1
-        sv= AiAllow(ownSea)
+        var x = -1
+        var sv= AiAllow(ownSea)
         if (sv != -1) {
             y = sv[0]
             x = sv[1]
+            if (STREAK == 5) {
+                DONESHIP[4] = true 
+            } else if (DONESHIP[4] && STREAK == 4) {
+                DONESHIP[3] = true 
+            } else if (DONESHIP[3] && DONESHIP[4] && STREAK == 3) {
+                DONESHIP[2] = true 
+            }
+            if (ownSea[y][x] == 0) {
+                if (STREAK == 5 || DONESHIP[4] && STREAK == 4 || DONESHIP[3] && DONESHIP[4] && STREAK == 3 || DONESHIP[2] && DONESHIP[3] && DONESHIP[4] && STREAK == 2) {
+                    ownSea[y][x] = 4
+                    STREAK = 0
+                    sv = NewCordGen(ownSea)
+                    y = sv[0]
+                    x = sv[1]
+                }
+            }
+            else if (ownSea[y][x] == 4) {
+                STREAK = 0
+                sv = NewCordGen(ownSea)
+                y = sv[0]
+                x = sv[1]
+            }
+
         }
         else{
-            do {
-                y = Math.floor(Math.random() * 10);
-                x = Math.floor(Math.random() * 10); 
-                console.log(y+' '+x)
-                console.log(UselessStep(y,x,ownSea))
-            } while (ownSea[y][x]==2 || UselessStep(y,x,ownSea) || ownSea[y][x]==3);
+            if (STREAK-1 >=0) {
+                DONESHIP[STREAK-1] = true
+            }
+            STREAK = 0
+            sv = NewCordGen(ownSea)
+            y = sv[0]
+                x = sv[1]
         }
         prev = [y,x]
         document.getElementById(''+y+true+x).style.backgroundColor="red"
@@ -124,6 +181,8 @@ function RobotStep(ownSea){
             document.getElementById(''+y+true+x).style.color="whitesmoke"
             document.getElementById(''+y+true+x).style.fontSize="35px"
             ownSea[y][x] = 3 // jo talalat
+            STREAK +=1
+            console.log(ownSea)
             Wincheck(false,ownSea)
             RobotStep(ownSea)
         }
