@@ -40,10 +40,14 @@ function Wincheck(who,sea){ // true= own; false = enemy
     }
     if (cntr == 15) {
         if (who) {
-            alert("TE NYERTÉÉÉL :)))))))))")
+            setTimeout(function() {
+                alert("TE NYERTÉÉÉL :)))))))))")
+            }, 500);
         }
         else{
-            alert("ROBOT NYERT :(((((")
+            setTimeout(function() {
+                alert("ROBOT NYERT :(((((")
+            }, 500);
         }
         MasterReset()
     }
