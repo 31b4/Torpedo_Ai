@@ -1,7 +1,8 @@
 // 0 = tenger ; 1 = hajo ; 2 = rossz talalat ; 3 = jo talalat ; 4 = felesleges odamenni
 /*
 HIBAK
-
+    Kiszamolja mennyi hely van es az alapjan dont
+    
 
 */
 var JATEKVAN = false
@@ -28,6 +29,8 @@ function StartFight(ownSea){
     RandomPlace(enemySea,false)
     MakeOnHover(false,enemySea)
     document.getElementById("Ycurrent").style.backgroundColor="green"
+    document.getElementById("Ycurrent").style.borderRadius = "8px"
+    document.getElementById("Ecurrent").style.borderRadius = "8px"
 }
 function Wincheck(who,sea){ // true= own; false = enemy
     cntr = 0
@@ -40,14 +43,10 @@ function Wincheck(who,sea){ // true= own; false = enemy
     }
     if (cntr == 15) {
         if (who) {
-            setTimeout(function() {
-                alert("TE NYERTÉÉÉL :)))))))))")
-            }, 500);
+            alert("TE NYERTÉÉÉL :)))))))))")
         }
         else{
-            setTimeout(function() {
-                alert("ROBOT NYERT :(((((")
-            }, 500);
+            alert("ROBOT NYERT :(((((")
         }
         MasterReset()
     }
@@ -297,11 +296,11 @@ function MakeSea(who,sea,otherSea){// true = own ; false = enemy
     div.className="col"
     var p = document.createElement("p")
     if (who) {
-        p.innerHTML="Hajóid"
+        p.innerHTML="Te"
         p.id="Ycurrent"
     }
     else{
-        p.innerHTML="Ellenfél"
+        p.innerHTML="Ai"
         p.id="Ecurrent"
     }
     p.style.fontSize="30px"
@@ -364,13 +363,30 @@ function StartButton(ownSea){
 function INFO(){
     PlayReset()
     var flottaDiv = document.getElementById("flotta")
-    var p = document.createElement("p")
-    p.innerHTML="A JATEK gombra kattintva lepakolja a hajókat (fekete négyzet). <br> Ha nem tetszik a lerakás akkor a gomb újboli megnyomás esetén máshova teszi.<br> Ha megelégedett a lepakolással akkor a GO gombbal véglegesítve elkezdődik a játék.<br> Ezután az ellenfél táblájában belül lehet kattintani a tetszőleg (kilövendő) négyzetre. <br>Majd vársz a robot válaszára és vica-versa."
-    p.style.fontSize="30px"
-    p.style.fontFamily="Roboto Mono"
-    p.style.color="whitesmoke"
-    p.style.marginTop="50px"
-    flottaDiv.appendChild(p)
+    var div = document.createElement("div")
+    div.id="aiLeiras"
+    var ul = document.createElement("ul")
+    var text = [
+        "A JATEK gombra kattintva megkapjuk a random legenerált hajóinkat <b>(fekete négyzetek)</b>.",
+        "Ha nem tetszik az állás akkor a gomb újboli legnyomása esetén új csatateret kapunk.",
+        "Ha megelégedett a lepakolással akkor a GO gombbal véglegesítve elkezdődik a játék.",
+        "Ezután az ellenfél táblájában belül lehet kattintani a tetszőleg (kilövendő) négyzetre.",
+        "Majd vársz a robot válaszára és vica-versa.",
+        "Győzze le az ai-t!, sok sikert"
+    ]
+    for (let i = 0; i < text.length; i++) {
+        var p = document.createElement("p")
+        var li = document.createElement("li")
+        p.innerHTML=text[i]
+        p.style.fontSize="30px"
+        p.style.fontFamily="Roboto Mono"
+        p.style.color="whitesmoke"
+        p.style.marginTop="50px"
+        li.appendChild(p)
+        ul.appendChild(li)            
+    }
+    div.appendChild(ul)
+    flottaDiv.appendChild(div)
 }
 //---------------MAIN--------------
 function Play(){

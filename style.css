@@ -65,3 +65,7 @@ footer {
     color: white;
     text-align: center;
 }
+footer p{
+    margin: auto;
+    padding: 10px;
+}
